@@ -1,0 +1,26 @@
+drop database if exists comp4442_project; 
+create database if not exists comp4442_project;
+use comp4442_project;
+CREATE TABLE IF NOT EXISTS drivingRecord
+(
+    driverID varchar(40) NOT NULL,
+    carPlateNumber varchar(40) DEFAULT NULL,
+    Latitude varchar(40) DEFAULT NULL,
+    Longtitude varchar(40) DEFAULT NULL,
+    Speed float,
+    Direction float,
+    siteName varchar(40) DEFAULT NULL,
+    Time DATETIME,
+    isRapidlySpeedup BOOLEAN,
+    isRapidlySlowdown BOOLEAN,
+    isNeutralSlide BOOLEAN,
+    isNeutralSlideFinished BOOLEAN,
+    neutralSlideTime float,
+    isOverspeed BOOLEAN,
+    isOverspeedFinished BOOLEAN,
+    overspeedTime float,
+    isFatigueDriving BOOLEAN,
+    isHthrottleStop BOOLEAN,
+    isOilLeak BOOLEAN
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
