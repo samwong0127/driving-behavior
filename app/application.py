@@ -30,10 +30,10 @@ def getdata():
 	cur.execute(sql)
 	datas = []
 	for i in cur.fetchall():
-		datas.append([i[0], i[1]])
+		datas.append([i[0], i[1], i[2]]) # i[0]: ctime, i[1]: driverID, i[2]:Speed
 
 	if len(datas) > 0 :
-		tmp_time = datas[-1][0]
+		tmp_time = datas[-1][0] # Set temp_time to new time
 
 	return json.dumps(datas)
 
