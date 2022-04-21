@@ -12,7 +12,7 @@ fileList = []
 for f in files:
   fullpath = join(recordsPath, f)
   if isfile(fullpath):
-    print("檔案：", f)
+    print("File: ", f)
     fileList.append(fullpath)
 
 nameOfKeys = ['driverID', 'carPlateNumber', 'Latitude',

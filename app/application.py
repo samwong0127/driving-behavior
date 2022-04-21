@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import json
+import requests
 import mysql.connector
 from db_conn import db_connection
 
@@ -11,11 +12,14 @@ cur = mydb.cursor()
 
 @application.route("/")
 def index():
- return render_template("monitor.html")
+	return render_template("index.html")
+
+@application.route("/monitor")
+def monitor():
+	return render_template("monitor.html")
 
 tmp_time = 0
-
-@application.route("/data")
+@application.route("/data") # Real time
 def getdata():
 	global tmp_time
 	if tmp_time > 0 :
@@ -32,6 +36,13 @@ def getdata():
 		tmp_time = datas[-1][0]
 
 	return json.dumps(datas)
+
+@application.route("/summary")
+def summary():
+	response_API = requests.get('https://www.askpython.com/')
+	print(response_API)
+	theResult = response_API
+	return render_template("summary.html", results = theResult)
 
 
 if __name__ == "__main__":

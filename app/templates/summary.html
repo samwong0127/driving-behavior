@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Summary of driving behavior</title>
+  <script src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+  <script src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
+  <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+  <style>
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Summary of driving behavior</h2>
+  <table border=1 style="margin:5% 0 0 15%">
+    <thead>
+      <tr style="padding:5% 0 0 15%" >
+          <th>Car plate number</th>
+          <th>Cumulative number of times of Overspeed</th>
+          <th>Cumulative number of times of Fatigue driving</th>
+          <th>Total time of Overspeed</th>
+          <th>Total time of Neutral slide</th>
+
+      </tr>            
+    </thead>
+    <tbody>
+      {% for result in results %}
+      <tr>
+          <td>{{result[0]}}</td>
+          <td>{{result[1]}}</td>
+          <td>{{result[2]}}</td>
+          <td>{{result[3]}}</td>    
+          <td>{{result[4]}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    
+</table>
+
+</body>
+
+<script type="text/javascript">
+</script>
+</html>
+
+
+
