@@ -23,9 +23,9 @@ tmp_time = 0
 def getdata():
 	global tmp_time
 	if tmp_time > 0 :
-		sql = "select ctime,num from Monitor where ctime >%s" %(tmp_time)
+		sql = "select ctime,driverID,Speed from drivingRecord where ctime >%s" %(tmp_time)
 	else:
-		sql = "select ctime,num from Monitor"
+		sql = "select ctime,driverID,Speed from drivingRecord"
 
 	cur.execute(sql)
 	datas = []
@@ -40,6 +40,7 @@ def getdata():
 @application.route("/summary")
 def summary():
 	response_API = requests.get('https://www.askpython.com/')
+	print(response_API.status_code)
 	print(response_API)
 	theResult = response_API
 	return render_template("summary.html", results = theResult)
