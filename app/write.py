@@ -4,16 +4,20 @@ from os import listdir
 from os.path import isfile, join
 from db_conn import db_connection
 
+def getFileList(path):
+    recordsPath = path
+    files = listdir(recordsPath)
+    fileList = []
 
-recordsPath = f'detail-records/'
-files = listdir(recordsPath)
-fileList = []
+    for f in files:
+        fullpath = join(recordsPath, f)
+        if isfile(fullpath):
+            #print("File: ", f)
+            fileList.append(fullpath)
 
-for f in files:
-  fullpath = join(recordsPath, f)
-  if isfile(fullpath):
-    print("File: ", f)
-    fileList.append(fullpath)
+    return fileList
+
+fileList = getFileList(f'detail-records')
 
 nameOfKeys = ['driverID', 'carPlateNumber', 'Latitude',
     'Longtitude',
@@ -25,7 +29,7 @@ nameOfKeys = ['driverID', 'carPlateNumber', 'Latitude',
     'isRapidlySlowdown',
     'isNeutralSlide',
     'isNeutralSlideFinished',
-    'isNeutralSlide',
+    'NeutralSlide',
     'isOverspeed',
     'isOverspeedFinished',
     'overspeedTime',
@@ -35,8 +39,8 @@ nameOfKeys = ['driverID', 'carPlateNumber', 'Latitude',
     ]
 
 
-#mydb = db_connection()
-#cur = mydb.cursor()
+mydb = db_connection()
+cur = mydb.cursor()
 
 def dataReformat(l):
     Time = int(time.time())
@@ -74,37 +78,22 @@ def dataReformat(l):
 
     return data
 
-    """
-    #print((l[0]))
-    data['driverID'] = l[0],
-    data['carPlateNumber'] = l[1],
-    data['Latitude'] = float(l[2]),
-    data['Longtitude'] = float(l[3]),
-    data['Speed'] = float(l[4]),
-    data['Direction'] = float(l[5]),
-    data['siteName'] = l[6],
-    data['time'] = Time
-    data['isRapidlySpeedup'] = l[8],
-    data['isRapidlySlowdown'] = l[9],
-    data['isNeutralSlide'] = l[10],
-    data['isNeutralSlideFinished'] = l[11],
-    data['neutralSlideTime'] = l[12],
-    data['isOverspeed'] = l[13],
-    data['isOverspeedFinished'] = l[14],
-    data['overspeedTime'] = l[15],
-    data['isFatigueDriving'] = l[16],
-    data['isHthrottleStop'] = l[17],
-    data['isOilLeak'] = l[18]
     
-    #print(data)
-    return data
-    """
 
 
 def readRaw(f):
     with open(f, encoding='utf-8') as file:
         lines = file.readlines()
     return lines
+
+insertCols = ['driverID', 
+    'carPlateNumber',
+    'Speed',
+    'time',
+    'isRapidlySpeedup',
+    'isRapidlySlowdown',
+    'isOverspeed',
+    'isOverspeedFinished']
 
 def genSQL(d):
     #print(d)
@@ -136,11 +125,12 @@ def genSQL(d):
     sql_start = "insert into drivingRecord values ("
     sql_end =")"
     sql_data = ""
-    for value in d.values():
-        try:
-            sql_data = sql_data + str(value) + ','
-        except:
-            sql_data = sql_data + str(value) + ','
+    for key, value in d.items():
+        if key in insertCols:
+            try:
+                sql_data = sql_data + '\'' + str(value) + '\'' +','
+            except:
+                sql_data = sql_data + '\'' +str(value) + '\'' +','
     
     sql_data = sql_data[:-1] # remove tailing comma
     sql3 = sql_start + sql_data + sql_end
@@ -161,15 +151,16 @@ def execute():
             
             #print((data['driverID'][0]))
             sql = genSQL(data)
-            print(sql)
+            #print(sql)
             
-            return
-            
-            #ret = cur.execute(sql) # run sql
-        return
+            #return
+            ret = cur.execute(sql) # run sql
+            print("Inserted...")
+            #time.sleep(0.001)
+        #return
 
 if __name__ == "__main__":
     while True:   
         execute()
-        #time.sleep(1)
-        break
+        time.sleep(1)
+        #break

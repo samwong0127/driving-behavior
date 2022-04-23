@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template
 import json
 import requests
-import mysql.connector
 from db_conn import db_connection
 
 application = Flask(__name__)
@@ -16,33 +15,43 @@ def index():
 
 @application.route("/monitor")
 def monitor():
-	return render_template("monitor.html")
+	return render_template("monitor2.html")
 
 tmp_time = 0
 @application.route("/data") # Real time
 def getdata():
 	global tmp_time
 	if tmp_time > 0 :
-		sql = "select ctime,driverID,Speed from drivingRecord where ctime >%s" %(tmp_time)
+		sql = "select ctime, driverID, Speed, isRapidlySpeedup, isRapidlySlowdown, isOverspeed, isOverspeedFinished from drivingRecord where ctime >%s" %(tmp_time)
 	else:
-		sql = "select ctime,driverID,Speed from drivingRecord"
+		sql = "select ctime, driverID, Speed, isRapidlySpeedup, isRapidlySlowdown, isOverspeed, isOverspeedFinished from drivingRecord"
 
+	
 	cur.execute(sql)
 	datas = []
 	for i in cur.fetchall():
-		datas.append([i[0], i[1], i[2]]) # i[0]: ctime, i[1]: driverID, i[2]:Speed
+		print("Record fetched:")
+		x = [ i[0], i[1], i[2], i[3], i[4], i[5], i[6] ]
+		print(x)
+		datas.append(x) # i[0]: ctime, i[1]: driverID, i[2]:Speed
 
-	if len(datas) > 0 :
+	if len(datas) > 0:
 		tmp_time = datas[-1][0] # Set temp_time to new time
 
 	return json.dumps(datas)
 
+
+
+from TXTparser import getSummary, getSummaryByDay
 @application.route("/summary")
 def summary():
+	'''
 	response_API = requests.get('https://www.askpython.com/')
 	print(response_API.status_code)
 	print(response_API)
 	theResult = response_API
+	'''
+	theResult = getSummary()
 	return render_template("summary.html", results = theResult)
 
 
