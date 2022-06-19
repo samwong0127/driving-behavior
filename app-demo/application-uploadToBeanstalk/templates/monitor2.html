@@ -1,0 +1,114 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Real-time Monitoring</title>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highcharts@10.0.0/highstock.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highcharts@10.0.0/modules/exporting.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+
+<body>
+  <div class="top">
+    <a href="/">Home</a>
+    <a class="active" href="monitor">Monitor</a>
+    <a href="summary">Summary</a>
+  </div>
+
+  <center>
+    <h1>
+      Driver behaviour real time monitoring application
+    </h1>
+  </center>
+  <br>
+
+  <div id="container0" style="min-width:400px;height:400px"></div>
+  <div id="container1" style="min-width:400px;height:400px"></div>
+  <div id="container2" style="min-width:400px;height:400px"></div>
+  <div id="container3" style="min-width:400px;height:400px"></div>
+  <div id="container4" style="min-width:400px;height:400px"></div>
+  <div id="container5" style="min-width:400px;height:400px"></div>
+  <div id="container6" style="min-width:400px;height:400px"></div>
+  <div id="container7" style="min-width:400px;height:400px"></div>
+  <div id="container8" style="min-width:400px;height:400px"></div>
+  <div id="container9" style="min-width:400px;height:400px"></div>
+</body>
+
+<script type="text/javascript">
+  let abnormal = {}
+
+  function makeChart(container, driver, results) {
+    $(container).highcharts('StockChart', {
+      chart: {
+        events: {
+          load() {
+            var chart = $(container).highcharts();
+            var series = chart.series[0];
+
+            let isAbnormalDriving = false;
+            for (const [ctime, _, speed, isRapidlySpeedup, __, isOverspeed, isOverspeedFinished] of results) {
+              series.addPoint([ctime * 1000, speed]);
+              isAbnormalDriving = (!!isRapidlySpeedup || !!isOverspeed) && !!!isOverspeedFinished
+            }
+
+            if (isAbnormalDriving ^ abnormal[driver]) {
+              if (isAbnormalDriving) {
+                series.update({ color: 'red' });
+                toastr.error(`Driver ${driver} is speeding!`, 'Warning!', { timeOut: 5000 })
+              } else {
+                toastr.info(`Driver ${driver} is normal again.`, 'Information', { timeOut: 5000 })
+                series.update({ color: 'green' });
+              }
+            }
+
+            abnormal[driver] = isAbnormalDriving
+          }
+        }
+      },
+      rangeSelector: {
+        selected: 1
+      },
+      title: {
+        text: driver
+      },
+      series: [{
+        name: 'Real-time Speed',
+        data: results.map(v => [v[0] * 1000, v[2]]),
+        tooltip: {
+          valueDecimals: 2
+        }
+      }]
+    });
+
+  }
+
+  async function fetchData() {
+    let drivers = [
+      'haowei1000008', 'likun1000003', 'duxu1000009', 'shenxian1000004', 'zengpeng1000000', 'hanhui1000002', 'panxian1000005', 'xiexiao1000001', 'xiezhi1000006', 'zouan1000007'
+    ]
+
+    const time = Math.round((Date.now() - 15000) / 1000)
+    for (const [idx, driver] of Object.entries(drivers)) {
+      const res = await fetch(`/data/${driver}/${time}`)
+      const data = await res.json()
+      console.log(data)
+      makeChart(`#container${idx}`, driver, data)
+    }
+  }
+
+  $(async function onready() {
+    const updateTime = 30000;
+
+    await fetchData()
+    setInterval(fetchData, updateTime)
+  })
+</script>
+
+</html>

@@ -1,0 +1,42 @@
+.top {
+    overflow: hidden;
+    background-color: #333;
+}
+  
+.top a {		
+float: left;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+}
+
+.top a:hover {
+background-color: #ddd;
+color: black;
+}
+
+.top a.active {
+background-color: #7EA6F4;
+color: white;
+}
+
+.hero-image {
+background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("drive.jpg");
+height: 50%;
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+position: relative;
+}
+
+.hero-text {
+text-align: center;
+position: absolute;
+top: 70%;
+left: 12%;
+transform: translate(-50%, -50%);
+color: #FFFFFF;
+background-color: #3A3B3C;
+}
