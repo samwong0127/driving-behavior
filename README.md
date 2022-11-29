@@ -20,3 +20,8 @@ Operating systems used in the development process: Windows and MacOS
 Deployment model:
 
 ![deployment model](pictures/driving-behaviour.jpg)
+
+#### Folder structure
+/pictures: Pictures used in README.md
+/data-analysis: Python files used for Spark analysis
+/app-demo: Files to construct the web app for monitoring and displaying driving behaviours.
