@@ -17,12 +17,23 @@ Operating systems used in the development process: Windows and MacOS
   - AWS S3 – Source files storage
   - AWS Beanstalk, EC2 – Cloud web application deployment
 
-Deployment model:
+### Deployment model:
 
 ![deployment model](pictures/driving-behaviour.jpg)
 
+## User Interface
+Real-time monitoring function
+![real_time_function_1](pictures/real_time_function_1.jpg)
 
-### Folder structure
+Warnings
+![real_time_function_2](pictures/real_time_function_2.jpg)
+![real_time_function_3](pictures/real_time_function_3.jpg)
+
+
+Summary
+![summary_1](pictures/summary_1.jpg)
+
+## Folder structure
 - **/pictures**: Pictures used in README.md
 - **/data-analysis**: Python files used for Spark analysis
 - **/app-demo**: Files to construct the web app for monitoring and displaying driving behaviours.
